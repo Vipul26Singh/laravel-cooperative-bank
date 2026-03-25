@@ -20,7 +20,7 @@ Route::get('/', function () {
             default      => 'login',
         });
     }
-    return redirect()->route('login');
+    return view('welcome');
 });
 
 // Auth Routes

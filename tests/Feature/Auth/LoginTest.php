@@ -39,9 +39,9 @@ class LoginTest extends TestCase
         $this->get('/superadmin/dashboard')->assertRedirect('/login');
     }
 
-    public function test_home_redirects_guest_to_login(): void
+    public function test_home_shows_landing_page_for_guest(): void
     {
-        $this->get('/')->assertRedirect(route('login'));
+        $this->get('/')->assertOk()->assertSee('CoopBank ERP');
     }
 
     public function test_successful_login_redirects_to_dashboard(): void

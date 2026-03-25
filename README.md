@@ -585,6 +585,22 @@ Planned improvements to make the system production-ready for real bank operation
 - [ ] **Overdue loan alerts** — email/SMS notifications for upcoming and overdue EMIs
 - [ ] **Branch comparison report** — compare performance metrics across branches
 
+### Customer Portal (Self-Service) — [Architecture Doc](CUSTOMER_PORTAL_ARCHITECTURE.md)
+- [ ] **Customer login** — separate auth for customers using mobile + password / OTP
+- [ ] **Account dashboard** — view savings account balances, recent transactions
+- [ ] **Loan details** — active loans, EMI schedule, outstanding balance, repayment history
+- [ ] **FD overview** — FD accounts with maturity dates and interest earned
+- [ ] **Account statement download** — PDF statement for any date range
+- [ ] **Profile management** — update contact info, nominee details
+
+### Payment Gateway & Payouts (Phase 2) — [Architecture Doc](CUSTOMER_PORTAL_ARCHITECTURE.md#phase-2--payment-gateway-integration)
+- [ ] **Online EMI payment** — pay loan EMI via Razorpay / Paytm / UPI
+- [ ] **Online FD opening** — open fixed deposits via online payment
+- [ ] **Online deposit** — add funds to savings account via PG
+- [ ] **Payout integration** — automated FD maturity payout and loan disbursement to bank account
+- [ ] **Payment history** — track all online payments with gateway reference IDs
+- [ ] **Webhook handlers** — auto-confirm payments and record transactions on gateway callback
+
 ### Technical
 - [ ] **Model factories** for all models — enable faster test writing
 - [ ] **Notification channels** — implement real SMS/email drivers (currently log-only)
