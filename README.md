@@ -69,7 +69,7 @@ Most cooperative banks in India still run on legacy desktop software or expensiv
 - **Event-Driven Architecture** — 11 domain events with queued listeners for notifications, audit logging, and schedule generation
 - **REST API** — Full Sanctum-authenticated API for mobile/SPA clients (customers, accounts, transactions, loans, FDs)
 - **Docker Standalone** — One-command deployment with Nginx, PHP-FPM, queue worker, and scheduler bundled in a single container
-- **115 Automated Tests** — 109 PHPUnit feature tests + 6 Dusk browser tests with 68 auto-generated screenshots
+- **163 Automated Tests** — 157 PHPUnit tests (109 web + 48 API) + 6 Dusk browser tests with 68 auto-generated screenshots
 
 ---
 
@@ -450,10 +450,11 @@ Two test suites cover the entire application — **PHPUnit** for fast backend lo
 
 ### Unit & Feature Tests (PHPUnit)
 
-109 tests covering authentication, role-based access, CRUD, business workflows, and input validation. Runs in ~3 seconds with SQLite in-memory.
+157 tests covering authentication, role-based access, CRUD, business workflows, input validation, and all REST API endpoints. Runs in ~4 seconds with SQLite in-memory.
 
 ```bash
 php artisan test                          # run all
+php artisan test --filter=Api             # API tests only
 php artisan test --filter=CustomerApprovalTest   # run one file
 php artisan test --coverage               # with coverage (needs Xdebug/PCOV)
 docker compose exec app php artisan test  # inside Docker
@@ -467,7 +468,15 @@ tests/Feature/
 ├── Manager/                            # Customer approval/reject, dashboard, workflow
 ├── Clerk/                              # Customer registration, loan application
 ├── Cashier/                            # Deposit, withdraw, validation
-└── Accountant/                         # Dashboard, role enforcement
+├── Accountant/                         # Dashboard, role enforcement
+└── Api/                                # REST API tests (Sanctum token auth)
+    ├── AuthApiTest.php                 # Login, logout, token lifecycle
+    ├── CustomerApiTest.php             # CRUD, approve, reject, filter
+    ├── BankAccountApiTest.php          # Open, list, search, close
+    ├── TransactionApiTest.php          # Deposit, withdraw, validation, cheque
+    ├── LoanApiTest.php                 # Disburse, schedule, repayment
+    ├── FdAccountApiTest.php            # Open FD, list, validate
+    └── DashboardApiTest.php            # Stats structure and counts
 ```
 
 ### Browser Tests (Laravel Dusk)
@@ -524,9 +533,10 @@ tests/Browser/screenshots/       # Auto-generated, organized by role
 
 | Suite | Tests | Assertions | Duration |
 |---|---|---|---|
-| PHPUnit (Feature + Unit) | 109 | 284 | ~3s |
-| Dusk (Browser) | 6 | 67 | ~140s |
-| **Total** | **115** | **351** | — |
+| PHPUnit — Web (Feature + Unit) | 109 | 284 | ~3s |
+| PHPUnit — API (Sanctum) | 48 | 162 | ~1s |
+| Dusk — Browser (headless Chrome) | 6 | 67 | ~140s |
+| **Total** | **163** | **513** | — |
 
 ---
 
