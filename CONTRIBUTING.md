@@ -22,8 +22,8 @@ Thank you for contributing! This guide covers branching strategy, code standards
 1. Fork the repository
 2. Clone your fork:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/cooperative_bank.git
-   cd cooperative_bank/laravel-app
+   git clone https://github.com/YOUR_USERNAME/laravel-cooperative-bank.git
+   cd laravel-cooperative-bank
    ```
 3. Set up the project:
    ```bash
@@ -85,7 +85,7 @@ This project uses **Laravel Pint** (PSR-12 based). Run before every commit:
 
 ### PHP Rules
 
-- PHP 8.3+ — use typed properties, constructor promotion, readonly where appropriate
+- PHP 8.4+ — use typed properties, constructor promotion, readonly where appropriate
 - No raw SQL — use Eloquent or the Query Builder
 - No business logic in controllers — delegate to Services
 - No `dd()`, `var_dump()`, or debug output in committed code
@@ -195,26 +195,48 @@ php artisan make:test Loans/LoanApprovalTest
 
 # Create a unit test
 php artisan make:test Services/LoanServiceTest --unit
+
+# Run tests inside Docker
+docker compose exec app php artisan test
 ```
 
-Use `RefreshDatabase` trait for tests that touch the database.
+Use `RefreshDatabase` trait and seed roles in `setUp()`. No factories exist yet — create test data with `Model::create()`.
 
 ```php
+use App\Models\{User, Role, Branch, Customer};
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class LoanApprovalTest extends TestCase
+class CustomerApprovalTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_manager_can_approve_loan_application(): void
+    private User $manager;
+
+    protected function setUp(): void
     {
-        $manager = User::factory()->create(['role_id' => Role::manager()->id]);
+        parent::setUp();
+        $this->seed(\Database\Seeders\RoleSeeder::class);
 
-        $response = $this->actingAs($manager)
-            ->post(route('manager.loan-applications.approve', $application));
+        $branch = Branch::create(['name' => 'Main', 'code' => 'BR001', 'address' => 'Addr', 'is_active' => true]);
+        $role = Role::where('name', 'Manager')->first();
+        $this->manager = User::create([
+            'name' => 'Manager', 'email' => 'mgr@test.com',
+            'password' => bcrypt('Password@123'), 'role_id' => $role->id,
+            'branch_id' => $branch->id, 'is_active' => true,
+        ]);
+    }
 
-        $response->assertRedirect();
-        $this->assertDatabaseHas('loans', ['loan_application_id' => $application->id]);
+    public function test_manager_can_approve_customer(): void
+    {
+        $customer = Customer::create([...]);
+
+        $this->actingAs($this->manager)
+            ->post("/manager/customers/{$customer->id}/approve")
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('customers', [
+            'id' => $customer->id, 'approval_status' => 'approved',
+        ]);
     }
 }
 ```

@@ -7,7 +7,7 @@ This file gives AI coding agents (Claude Code, Cursor, Copilot) the context need
 ## Project Overview
 
 Laravel 13 cooperative banking system. Multi-role web app + REST API.
-Source lives in `laravel-app/` (the old PHP monolith in the repo root is archived).
+Source lives at the repository root. Dockerized for standalone deployment.
 
 ---
 
@@ -28,7 +28,14 @@ php artisan schedule:work   # run scheduler locally
 
 # Code quality
 ./vendor/bin/pint           # fix code style (Laravel Pint)
-php artisan test            # run test suite
+php artisan test            # run test suite (109 feature tests)
+
+# Docker
+docker compose up -d              # start (standalone, no PHP/Node needed)
+docker compose up -d --build      # rebuild after code changes
+docker compose down -v            # stop and reset all data
+docker compose exec app sh        # shell into container
+docker compose exec app php artisan test   # run tests in Docker
 
 # Database
 php artisan migrate         # run pending migrations
@@ -209,6 +216,46 @@ BRANCH_ID=                        # can override branch context in dev
 
 ## File Size Limits (KYC uploads)
 
-PAN and Aadhaar file uploads go to `storage/app/private/kyc/`.
+PAN and Aadhaar file uploads are stored as base64 in the database (`photo`, `id_proof1`, `id_proof2` columns on `customers`).
 Max size: 2MB. Allowed types: `jpg`, `jpeg`, `png`, `pdf`.
-Access via: `Storage::disk('private')->url($path)` (requires signed URL in prod).
+
+---
+
+## Testing
+
+Tests use **PHPUnit 12** with **SQLite in-memory** (`phpunit.xml` sets `DB_DATABASE=:memory:`).
+
+```bash
+php artisan test                          # all tests
+php artisan test --filter=BranchTest      # single file
+php artisan test --testsuite=Feature      # feature tests only
+```
+
+Test files live in `tests/Feature/` organized by role:
+
+| Directory | Covers |
+|---|---|
+| `Auth/` | Login, logout, role redirects |
+| `RoleAccess/` | All 5 roles × all route groups |
+| `SuperAdmin/` | Branch, User, LoanType, FdSetup, AccountType, CompanySetup CRUD |
+| `Manager/` | Customer approval/rejection, dashboard, workflows |
+| `Clerk/` | Customer registration, loan application submission |
+| `Cashier/` | Transaction deposit/withdraw, validation |
+| `Accountant/` | Dashboard, role enforcement |
+
+Every test uses `RefreshDatabase` trait and seeds roles via `RoleSeeder`. Create test data directly with `Model::create()` — no factories exist yet.
+
+---
+
+## Docker
+
+The app runs as a standalone Docker container (Nginx + PHP-FPM 8.4 + Supervisor + SQLite).
+
+Key files:
+- `Dockerfile` — multi-stage build (Node for assets → Composer for deps → PHP-FPM Alpine)
+- `docker-compose.yml` — production config
+- `docker-compose.override.yml` — dev overrides (mounts local source for live reload)
+- `docker/` — nginx.conf, php.ini, supervisord.conf, entrypoint.sh
+- `.dockerignore` — keeps image lean
+
+The `entrypoint.sh` auto-creates `.env`, generates app key, runs migrations, and seeds on first boot. Caches are skipped in `APP_ENV=local`.

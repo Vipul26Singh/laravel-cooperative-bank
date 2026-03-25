@@ -13,33 +13,33 @@ class LoanApplication extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'application_number',
         'customer_id',
         'loan_type_id',
-        'branch_id',
         'applied_amount',
-        'purpose',
+        'approved_amount',
+        'application_date',
+        'loan_purpose',
         'duration_months',
+        'frequency',
         'guarantor1_id',
         'guarantor2_id',
-        'application_date',
-        'status',
-        'approved_by',
-        'approved_at',
-        'approved_amount',
-        'rejection_reason',
         'remarks',
+        'approval_status',
+        'approval_date',
+        'approver_remark',
+        'approved_by',
+        'loan_status',
+        'branch_id',
         'via_mobile',
         'via_internet',
         'created_by',
-        'modified_by',
     ];
 
     protected $casts = [
         'applied_amount'   => 'decimal:2',
         'approved_amount'  => 'decimal:2',
         'application_date' => 'date',
-        'approved_at'      => 'datetime',
+        'approval_date'    => 'datetime',
         'via_mobile'       => 'boolean',
         'via_internet'     => 'boolean',
     ];
@@ -94,11 +94,11 @@ class LoanApplication extends Model
 
     public function scopePending(Builder $query): Builder
     {
-        return $query->where('status', 'pending');
+        return $query->where('approval_status', 'pending');
     }
 
     public function scopeApproved(Builder $query): Builder
     {
-        return $query->where('status', 'approved');
+        return $query->where('approval_status', 'approved');
     }
 }

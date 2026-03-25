@@ -10,32 +10,39 @@
         @csrf
         <div class="card-body">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label>Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
                         @error('name') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
-                        <label>Minimum Balance</label>
-                        <input type="number" step="0.01" name="min_balance" class="form-control @error('min_balance') is-invalid @enderror" value="{{ old('min_balance') }}">
-                        @error('min_balance') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                        <label>Type <span class="text-danger">*</span></label>
+                        <select name="type" class="form-control @error('type') is-invalid @enderror" required>
+                            <option value="">-- Select --</option>
+                            <option value="Savings" {{ old('type') == 'Savings' ? 'selected' : '' }}>Savings</option>
+                            <option value="Current" {{ old('type') == 'Current' ? 'selected' : '' }}>Current</option>
+                            <option value="OD" {{ old('type') == 'OD' ? 'selected' : '' }}>Overdraft (OD)</option>
+                        </select>
+                        @error('type') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Minimum Balance</label>
+                        <input type="number" step="0.01" name="minimum_balance" class="form-control @error('minimum_balance') is-invalid @enderror" value="{{ old('minimum_balance') }}">
+                        @error('minimum_balance') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+                <div class="col-md-3">
                     <div class="form-group">
                         <label>Interest Rate (%)</label>
                         <input type="number" step="0.01" name="interest_rate" class="form-control @error('interest_rate') is-invalid @enderror" value="{{ old('interest_rate') }}">
                         @error('interest_rate') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="2">{{ old('description') }}</textarea>
-                @error('description') <span class="invalid-feedback">{{ $message }}</span> @enderror
             </div>
             <div class="form-group">
                 <div class="custom-control custom-switch">

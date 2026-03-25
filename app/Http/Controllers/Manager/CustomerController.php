@@ -31,7 +31,7 @@ class CustomerController extends Controller
 
     public function approve(Request $request, Customer $customer)
     {
-        $this->customerService->approve($customer, Auth::user());
+        $this->customerService->approve($customer, Auth::id());
 
         return redirect()->route('manager.customers.show', $customer->id)
             ->with('success', 'Customer approved successfully.');
@@ -43,7 +43,7 @@ class CustomerController extends Controller
             'rejection_reason' => 'nullable|string|max:500',
         ]);
 
-        $this->customerService->reject($customer, Auth::user(), $request->rejection_reason);
+        $this->customerService->reject($customer, Auth::id(), $request->rejection_reason ?? '');
 
         return redirect()->route('manager.customers.show', $customer->id)
             ->with('success', 'Customer rejected.');

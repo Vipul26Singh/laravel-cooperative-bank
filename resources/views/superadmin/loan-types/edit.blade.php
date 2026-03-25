@@ -26,25 +26,35 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
-                        <label>Min Amount</label>
-                        <input type="number" step="0.01" name="min_amount" class="form-control @error('min_amount') is-invalid @enderror" value="{{ old('min_amount', $loanType->min_amount) }}">
-                        @error('min_amount') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                        <label>Duration (months) <span class="text-danger">*</span></label>
+                        <input type="number" name="duration_months" class="form-control @error('duration_months') is-invalid @enderror" value="{{ old('duration_months', $loanType->duration_months) }}" required>
+                        @error('duration_months') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
-                        <label>Max Amount</label>
-                        <input type="number" step="0.01" name="max_amount" class="form-control @error('max_amount') is-invalid @enderror" value="{{ old('max_amount', $loanType->max_amount) }}">
+                        <label>Max Amount <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" name="max_amount" class="form-control @error('max_amount') is-invalid @enderror" value="{{ old('max_amount', $loanType->max_amount) }}" required>
                         @error('max_amount') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
-                        <label>Max Duration (months)</label>
-                        <input type="number" name="max_duration" class="form-control @error('max_duration') is-invalid @enderror" value="{{ old('max_duration', $loanType->max_duration) }}">
-                        @error('max_duration') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                        <label>No. of Installments <span class="text-danger">*</span></label>
+                        <input type="number" name="num_installments" class="form-control @error('num_installments') is-invalid @enderror" value="{{ old('num_installments', $loanType->num_installments) }}" required>
+                        @error('num_installments') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Frequency</label>
+                        <select name="frequency" class="form-control">
+                            <option value="MONTHLY" {{ old('frequency', $loanType->frequency) == 'MONTHLY' ? 'selected' : '' }}>Monthly</option>
+                            <option value="QUARTERLY" {{ old('frequency', $loanType->frequency) == 'QUARTERLY' ? 'selected' : '' }}>Quarterly</option>
+                            <option value="YEARLY" {{ old('frequency', $loanType->frequency) == 'YEARLY' ? 'selected' : '' }}>Yearly</option>
+                        </select>
                     </div>
                 </div>
             </div>

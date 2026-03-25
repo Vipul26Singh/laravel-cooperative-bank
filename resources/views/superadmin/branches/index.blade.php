@@ -18,8 +18,7 @@
                     <th>#</th>
                     <th>Name</th>
                     <th>Code</th>
-                    <th>City</th>
-                    <th>Phone</th>
+                    <th>Opening Date</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -30,8 +29,7 @@
                     <td>{{ $branch->id }}</td>
                     <td>{{ $branch->name }}</td>
                     <td><code>{{ $branch->code }}</code></td>
-                    <td>{{ $branch->city ?? '-' }}</td>
-                    <td>{{ $branch->phone ?? '-' }}</td>
+                    <td>{{ $branch->opening_date?->format('d M Y') ?? '-' }}</td>
                     <td>
                         @if($branch->is_active)
                             <span class="badge badge-success">Active</span>
@@ -50,7 +48,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="7" class="text-center text-muted">No branches found.</td></tr>
+                <tr><td colspan="6" class="text-center text-muted">No branches found.</td></tr>
                 @endforelse
             </tbody>
         </table>

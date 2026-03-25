@@ -20,15 +20,17 @@ class AccountTypeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'              => 'required|string|max:255',
-            'min_balance'       => 'nullable|numeric|min:0',
-            'interest_rate'     => 'nullable|numeric|min:0|max:100',
-            'description'       => 'nullable|string',
-            'is_active'         => 'boolean',
+            'name'                      => 'required|string|max:50',
+            'type'                      => 'required|string|max:50',
+            'minimum_balance'           => 'nullable|numeric|min:0',
+            'interest_rate'             => 'nullable|numeric|min:0|max:100',
+            'interest_calculation_days' => 'nullable|integer|min:1',
+            'is_active'                 => 'boolean',
         ]);
 
         AccountType::create($request->only([
-            'name', 'min_balance', 'interest_rate', 'description', 'is_active',
+            'name', 'type', 'minimum_balance', 'interest_rate',
+            'interest_calculation_days', 'is_active',
         ]));
 
         return redirect()->route('superadmin.account-types.index')
@@ -43,15 +45,17 @@ class AccountTypeController extends Controller
     public function update(Request $request, AccountType $accountType)
     {
         $request->validate([
-            'name'          => 'required|string|max:255',
-            'min_balance'   => 'nullable|numeric|min:0',
-            'interest_rate' => 'nullable|numeric|min:0|max:100',
-            'description'   => 'nullable|string',
-            'is_active'     => 'boolean',
+            'name'                      => 'required|string|max:50',
+            'type'                      => 'required|string|max:50',
+            'minimum_balance'           => 'nullable|numeric|min:0',
+            'interest_rate'             => 'nullable|numeric|min:0|max:100',
+            'interest_calculation_days' => 'nullable|integer|min:1',
+            'is_active'                 => 'boolean',
         ]);
 
         $accountType->update($request->only([
-            'name', 'min_balance', 'interest_rate', 'description', 'is_active',
+            'name', 'type', 'minimum_balance', 'interest_rate',
+            'interest_calculation_days', 'is_active',
         ]));
 
         return redirect()->route('superadmin.account-types.index')

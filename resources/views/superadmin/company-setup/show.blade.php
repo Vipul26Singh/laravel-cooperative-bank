@@ -13,15 +13,15 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Company Name <span class="text-danger">*</span></label>
-                        <input type="text" name="company_name" class="form-control @error('company_name') is-invalid @enderror" value="{{ old('company_name', $company->company_name ?? '') }}" required>
-                        @error('company_name') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $company->name ?? '') }}" required>
+                        @error('name') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Registration No.</label>
-                        <input type="text" name="registration_no" class="form-control @error('registration_no') is-invalid @enderror" value="{{ old('registration_no', $company->registration_no ?? '') }}">
-                        @error('registration_no') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                        <label>Email</label>
+                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $company->email ?? '') }}">
+                        @error('email') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
             </div>
@@ -33,53 +33,23 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>City</label>
-                        <input type="text" name="city" class="form-control @error('city') is-invalid @enderror" value="{{ old('city', $company->city ?? '') }}">
-                        @error('city') <span class="invalid-feedback">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>State</label>
-                        <input type="text" name="state" class="form-control @error('state') is-invalid @enderror" value="{{ old('state', $company->state ?? '') }}">
-                        @error('state') <span class="invalid-feedback">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Country</label>
-                        <input type="text" name="country" class="form-control @error('country') is-invalid @enderror" value="{{ old('country', $company->country ?? '') }}">
-                        @error('country') <span class="invalid-feedback">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label>Pincode</label>
-                        <input type="text" name="pincode" class="form-control @error('pincode') is-invalid @enderror" value="{{ old('pincode', $company->pincode ?? '') }}">
-                        @error('pincode') <span class="invalid-feedback">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
                         <label>Phone</label>
                         <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $company->phone ?? '') }}">
                         @error('phone') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $company->email ?? '') }}">
-                        @error('email') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                        <label>GST No.</label>
+                        <input type="text" name="gst_no" class="form-control @error('gst_no') is-invalid @enderror" value="{{ old('gst_no', $company->gst_no ?? '') }}">
+                        @error('gst_no') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label>Established Year</label>
-                        <input type="number" name="established_year" class="form-control @error('established_year') is-invalid @enderror" value="{{ old('established_year', $company->established_year ?? '') }}">
-                        @error('established_year') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                        <label>PAN No.</label>
+                        <input type="text" name="pan_no" class="form-control @error('pan_no') is-invalid @enderror" value="{{ old('pan_no', $company->pan_no ?? '') }}">
+                        @error('pan_no') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
             </div>

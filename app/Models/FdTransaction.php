@@ -9,21 +9,22 @@ class FdTransaction extends Model
 {
     protected $fillable = [
         'fd_account_id',
+        'fd_number',
         'customer_id',
-        'branch_id',
         'transaction_type',
         'amount',
-        'interest_amount',
+        'interest_earned',
+        'balance_after',
         'transaction_date',
-        'reference_number',
-        'narration',
+        'remarks',
+        'branch_id',
         'created_by',
-        'modified_by',
     ];
 
     protected $casts = [
         'amount'           => 'decimal:2',
-        'interest_amount'  => 'decimal:2',
+        'interest_earned'  => 'decimal:2',
+        'balance_after'    => 'decimal:2',
         'transaction_date' => 'datetime',
     ];
 

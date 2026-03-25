@@ -28,6 +28,7 @@ class LoanService
     public function submitApplication(array $data): LoanApplication
     {
         return DB::transaction(function () use ($data) {
+            $data['application_date'] = $data['application_date'] ?? now()->toDateString();
             $application = LoanApplication::create($data);
             event(new LoanApplicationSubmitted($application));
             return $application;
@@ -50,6 +51,17 @@ class LoanService
         });
     }
 
+    public function rejectApplication(LoanApplication $application, array $data): LoanApplication
+    {
+        $application->update([
+            'approval_status' => 'rejected',
+            'approved_by'     => $data['approved_by'],
+            'approval_date'   => now(),
+            'approver_remark' => $data['remark'] ?? null,
+        ]);
+        return $application->fresh();
+    }
+
     public function disburseLoan(array $data): Loan
     {
         return DB::transaction(function () use ($data) {
@@ -58,6 +70,8 @@ class LoanService
             $data['installment_amount']  = $emi;
             $data['num_installments']    = $data['duration_months'];
             $data['outstanding_balance'] = $data['amount'];
+            $data['loan_date']           = $data['loan_date'] ?? now()->toDateString();
+            $data['disburse_date']       = $data['disburse_date'] ?? now();
             $data['status']              = 'active';
             $loan = Loan::create($data);
             if (isset($data['loan_application_id'])) {

@@ -20,18 +20,15 @@ class BranchController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'          => 'required|string|max:255',
-            'code'          => 'required|string|max:50|unique:branches,code',
-            'address'       => 'nullable|string',
-            'city'          => 'nullable|string|max:100',
-            'state'         => 'nullable|string|max:100',
-            'phone'         => 'nullable|string|max:20',
-            'email'         => 'nullable|email|max:255',
-            'is_active'     => 'boolean',
+            'name'         => 'required|string|max:105',
+            'code'         => 'required|string|max:50|unique:branches,code',
+            'address'      => 'nullable|string',
+            'opening_date' => 'nullable|date',
+            'is_active'    => 'boolean',
         ]);
 
         Branch::create($request->only([
-            'name', 'code', 'address', 'city', 'state', 'phone', 'email', 'is_active',
+            'name', 'code', 'address', 'opening_date', 'is_active',
         ]));
 
         return redirect()->route('superadmin.branches.index')
@@ -46,18 +43,15 @@ class BranchController extends Controller
     public function update(Request $request, Branch $branch)
     {
         $request->validate([
-            'name'      => 'required|string|max:255',
-            'code'      => 'required|string|max:50|unique:branches,code,' . $branch->id,
-            'address'   => 'nullable|string',
-            'city'      => 'nullable|string|max:100',
-            'state'     => 'nullable|string|max:100',
-            'phone'     => 'nullable|string|max:20',
-            'email'     => 'nullable|email|max:255',
-            'is_active' => 'boolean',
+            'name'         => 'required|string|max:105',
+            'code'         => 'required|string|max:50|unique:branches,code,' . $branch->id,
+            'address'      => 'nullable|string',
+            'opening_date' => 'nullable|date',
+            'is_active'    => 'boolean',
         ]);
 
         $branch->update($request->only([
-            'name', 'code', 'address', 'city', 'state', 'phone', 'email', 'is_active',
+            'name', 'code', 'address', 'opening_date', 'is_active',
         ]));
 
         return redirect()->route('superadmin.branches.index')

@@ -42,12 +42,14 @@ class LoanRepaymentController extends Controller
 
     public function store(StoreLoanRepaymentRequest $request)
     {
+        $loan = Loan::findOrFail($request->loan_id);
+
         $data = array_merge($request->validated(), [
             'branch_id'  => Auth::user()->branch_id,
             'created_by' => Auth::id(),
         ]);
 
-        $transaction = $this->loanService->recordRepayment($data);
+        $transaction = $this->loanService->recordRepayment($loan, $data);
 
         return redirect()->route('cashier.loan-repayments.show', $transaction->id)
             ->with('success', 'Loan repayment recorded successfully.');

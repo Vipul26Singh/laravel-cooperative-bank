@@ -12,16 +12,9 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Scheme Name <span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
-                        @error('name') <span class="invalid-feedback">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Duration (months) <span class="text-danger">*</span></label>
-                        <input type="number" name="duration_months" class="form-control @error('duration_months') is-invalid @enderror" value="{{ old('duration_months') }}" required>
-                        @error('duration_months') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                        <label>Duration (days) <span class="text-danger">*</span></label>
+                        <input type="number" name="duration_days" class="form-control @error('duration_days') is-invalid @enderror" value="{{ old('duration_days') }}" required>
+                        @error('duration_days') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -31,26 +24,27 @@
                         @error('interest_rate') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label>Min Amount</label>
-                        <input type="number" step="0.01" name="min_amount" class="form-control @error('min_amount') is-invalid @enderror" value="{{ old('min_amount') }}">
-                        @error('min_amount') <span class="invalid-feedback">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Max Amount</label>
-                        <input type="number" step="0.01" name="max_amount" class="form-control @error('max_amount') is-invalid @enderror" value="{{ old('max_amount') }}">
-                        @error('max_amount') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                        <label>Options</label>
+                        <div class="mt-2">
+                            <div class="custom-control custom-checkbox d-inline mr-3">
+                                <input type="hidden" name="is_senior_citizen" value="0">
+                                <input type="checkbox" name="is_senior_citizen" value="1" class="custom-control-input" id="is_senior_citizen" {{ old('is_senior_citizen') ? 'checked' : '' }}>
+                                <label class="custom-control-label" for="is_senior_citizen">Senior Citizen</label>
+                            </div>
+                            <div class="custom-control custom-checkbox d-inline">
+                                <input type="hidden" name="is_special_roi" value="0">
+                                <input type="checkbox" name="is_special_roi" value="1" class="custom-control-input" id="is_special_roi" {{ old('is_special_roi') ? 'checked' : '' }}>
+                                <label class="custom-control-label" for="is_special_roi">Special ROI</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <label>Description</label>
-                <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="2">{{ old('description') }}</textarea>
+                <label>Description <span class="text-danger">*</span></label>
+                <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="2" required>{{ old('description') }}</textarea>
                 @error('description') <span class="invalid-feedback">{{ $message }}</span> @enderror
             </div>
             <div class="form-group">

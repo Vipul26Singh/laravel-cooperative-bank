@@ -43,7 +43,7 @@ A full-featured cooperative banking management system built with **Laravel 13**,
 
 | Layer | Technology |
 |---|---|
-| Backend | PHP 8.3+, Laravel 13 |
+| Backend | PHP 8.4+, Laravel 13 |
 | Database | SQLite (dev) / MySQL or PostgreSQL (prod) |
 | Authentication | Laravel Sanctum |
 | Queue | Database queue driver |
@@ -57,7 +57,7 @@ A full-featured cooperative banking management system built with **Laravel 13**,
 
 ## System Requirements
 
-- PHP >= 8.3
+- PHP >= 8.4
 - Composer >= 2.x
 - Node.js >= 20.x & npm >= 10.x
 - SQLite 3 (dev) or MySQL 8+ / PostgreSQL 14+ (prod)
@@ -187,7 +187,7 @@ Data survives container restarts and rebuilds. To fully reset, run `docker compo
 
 The container bundles everything in a single image:
 - **Nginx** — web server on port 80
-- **PHP-FPM 8.3** — application runtime
+- **PHP-FPM 8.4** — application runtime
 - **Supervisor** — manages Nginx, PHP-FPM, queue worker, and scheduler
 - **SQLite** — embedded database (no external DB needed)
 
@@ -195,7 +195,7 @@ The container bundles everything in a single image:
 ┌──────────────────────────────────────────┐
 │            Docker Container              │
 │                                          │
-│   Nginx :80  ──►  PHP-FPM :9000         │
+│   Nginx :80  ──►  PHP-FPM 8.4 :9000     │
 │                                          │
 │   Supervisor                             │
 │   ├── php-fpm                            │
@@ -334,12 +334,14 @@ Managed via `routes/console.php`:
 Start the scheduler in production:
 
 ```bash
-* * * * * cd /path/to/laravel-app && php artisan schedule:run >> /dev/null 2>&1
+* * * * * cd /path/to/laravel-cooperative-bank && php artisan schedule:run >> /dev/null 2>&1
 ```
 
 ---
 
 ## Testing
+
+The project uses **PHPUnit 12** with **SQLite in-memory** for fast, isolated tests. 109 feature tests cover authentication, role-based access, CRUD operations, business workflows, and input validation.
 
 ```bash
 # Run all tests
@@ -351,6 +353,41 @@ php artisan test --coverage
 # Run specific test suite
 php artisan test --testsuite=Feature
 php artisan test --testsuite=Unit
+
+# Run a specific test file
+php artisan test --filter=CustomerApprovalTest
+
+# Run tests inside Docker
+docker compose exec app php artisan test
+```
+
+### Test Structure
+
+```
+tests/Feature/
+├── Auth/
+│   └── LoginTest.php                  # Login, logout, redirects, validation
+├── RoleAccess/
+│   └── RoleAccessTest.php             # All 5 roles × all route groups
+├── SuperAdmin/
+│   ├── BranchTest.php                 # Branch CRUD
+│   ├── UserManagementTest.php         # User CRUD, password handling
+│   ├── LoanTypeTest.php              # Loan type CRUD
+│   ├── FdSetupTest.php               # FD setup CRUD
+│   ├── AccountTypeTest.php           # Account type CRUD
+│   └── CompanySetupTest.php          # Company config
+├── Manager/
+│   ├── DashboardTest.php             # Dashboard, branch scoping
+│   ├── CustomerApprovalTest.php      # Approve/reject, role enforcement
+│   └── CustomerWorkflowTest.php      # End-to-end approval workflow
+├── Clerk/
+│   ├── CustomerRegistrationTest.php  # Registration, validation, scoping
+│   └── LoanApplicationTest.php       # Submit, validate, create
+├── Cashier/
+│   ├── DashboardTest.php             # Dashboard, form access
+│   └── TransactionTest.php           # Deposit, withdraw, validation
+└── Accountant/
+    └── DashboardTest.php             # Dashboard, role enforcement
 ```
 
 ---

@@ -17,6 +17,7 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
+                    <th>Type</th>
                     <th>Min Balance</th>
                     <th>Interest Rate</th>
                     <th>Status</th>
@@ -28,8 +29,9 @@
                 <tr>
                     <td>{{ $at->id }}</td>
                     <td>{{ $at->name }}</td>
-                    <td>{{ $at->min_balance ? number_format($at->min_balance, 2) : '-' }}</td>
-                    <td>{{ $at->interest_rate ? $at->interest_rate . '%' : '-' }}</td>
+                    <td>{{ $at->type }}</td>
+                    <td>{{ number_format($at->minimum_balance, 2) }}</td>
+                    <td>{{ $at->interest_rate }}%</td>
                     <td>
                         @if($at->is_active)
                             <span class="badge badge-success">Active</span>
@@ -48,7 +50,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="6" class="text-center text-muted">No account types found.</td></tr>
+                <tr><td colspan="7" class="text-center text-muted">No account types found.</td></tr>
                 @endforelse
             </tbody>
         </table>

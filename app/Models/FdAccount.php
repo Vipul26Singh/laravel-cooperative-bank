@@ -14,20 +14,25 @@ class FdAccount extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'fd_account_number',
+        'fd_number',
         'customer_id',
         'fd_setup_id',
         'branch_id',
         'principal_amount',
         'interest_rate',
-        'maturity_amount',
+        'duration_days',
         'fd_date',
+        'maturity_amount',
         'maturity_date',
+        'withdrawal_date',
         'is_matured',
         'is_withdrawn',
+        'transaction_mode',
+        'cheque_number',
+        'bank_name',
+        'cheque_date',
         'via_mobile',
         'via_internet',
-        'remarks',
         'created_by',
         'modified_by',
     ];

@@ -35,6 +35,8 @@ class AccountService
                 ...$data,
                 'transaction_type' => 'Deposit',
                 'balance_after'    => $newBalance,
+                'account_number'   => $account->account_number,
+                'customer_id'      => $account->customer_id,
             ]);
             event(new TransactionCompleted($transaction));
             return $transaction;
@@ -51,6 +53,8 @@ class AccountService
                 ...$data,
                 'transaction_type' => 'Withdraw',
                 'balance_after'    => $newBalance,
+                'account_number'   => $account->account_number,
+                'customer_id'      => $account->customer_id,
             ]);
             event(new TransactionCompleted($transaction));
             return $transaction;

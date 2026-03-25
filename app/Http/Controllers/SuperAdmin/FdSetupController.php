@@ -20,17 +20,17 @@ class FdSetupController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'              => 'required|string|max:255',
-            'duration_months'   => 'required|integer|min:1',
+            'description'       => 'required|string',
             'interest_rate'     => 'required|numeric|min:0|max:100',
-            'min_amount'        => 'nullable|numeric|min:0',
-            'max_amount'        => 'nullable|numeric|min:0',
-            'description'       => 'nullable|string',
+            'duration_days'     => 'required|integer|min:1',
+            'is_senior_citizen' => 'boolean',
+            'is_special_roi'    => 'boolean',
             'is_active'         => 'boolean',
         ]);
 
         FdSetup::create($request->only([
-            'name', 'duration_months', 'interest_rate', 'min_amount', 'max_amount', 'description', 'is_active',
+            'description', 'interest_rate', 'duration_days',
+            'is_senior_citizen', 'is_special_roi', 'is_active',
         ]));
 
         return redirect()->route('superadmin.fd-setups.index')
@@ -45,17 +45,17 @@ class FdSetupController extends Controller
     public function update(Request $request, FdSetup $fdSetup)
     {
         $request->validate([
-            'name'            => 'required|string|max:255',
-            'duration_months' => 'required|integer|min:1',
-            'interest_rate'   => 'required|numeric|min:0|max:100',
-            'min_amount'      => 'nullable|numeric|min:0',
-            'max_amount'      => 'nullable|numeric|min:0',
-            'description'     => 'nullable|string',
-            'is_active'       => 'boolean',
+            'description'       => 'required|string',
+            'interest_rate'     => 'required|numeric|min:0|max:100',
+            'duration_days'     => 'required|integer|min:1',
+            'is_senior_citizen' => 'boolean',
+            'is_special_roi'    => 'boolean',
+            'is_active'         => 'boolean',
         ]);
 
         $fdSetup->update($request->only([
-            'name', 'duration_months', 'interest_rate', 'min_amount', 'max_amount', 'description', 'is_active',
+            'description', 'interest_rate', 'duration_days',
+            'is_senior_citizen', 'is_special_roi', 'is_active',
         ]));
 
         return redirect()->route('superadmin.fd-setups.index')

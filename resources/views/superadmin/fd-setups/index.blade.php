@@ -16,11 +16,11 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th>Duration (months)</th>
+                    <th>Description</th>
+                    <th>Duration (days)</th>
                     <th>Interest Rate</th>
-                    <th>Min Amount</th>
-                    <th>Max Amount</th>
+                    <th>Senior Citizen</th>
+                    <th>Special ROI</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -29,11 +29,11 @@
                 @forelse($fdSetups as $fd)
                 <tr>
                     <td>{{ $fd->id }}</td>
-                    <td>{{ $fd->name }}</td>
-                    <td>{{ $fd->duration_months }}</td>
+                    <td>{{ Str::limit($fd->description, 40) }}</td>
+                    <td>{{ $fd->duration_days }}</td>
                     <td>{{ $fd->interest_rate }}%</td>
-                    <td>{{ $fd->min_amount ? number_format($fd->min_amount, 2) : '-' }}</td>
-                    <td>{{ $fd->max_amount ? number_format($fd->max_amount, 2) : '-' }}</td>
+                    <td>{!! $fd->is_senior_citizen ? '<span class="badge badge-info">Yes</span>' : 'No' !!}</td>
+                    <td>{!! $fd->is_special_roi ? '<span class="badge badge-warning">Yes</span>' : 'No' !!}</td>
                     <td>
                         @if($fd->is_active)
                             <span class="badge badge-success">Active</span>

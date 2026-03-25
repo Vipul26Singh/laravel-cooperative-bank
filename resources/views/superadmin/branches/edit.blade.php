@@ -10,18 +10,25 @@
         @csrf @method('PUT')
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label>Branch Name <span class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $branch->name) }}" required>
                         @error('name') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label>Branch Code <span class="text-danger">*</span></label>
                         <input type="text" name="code" class="form-control @error('code') is-invalid @enderror" value="{{ old('code', $branch->code) }}" required>
                         @error('code') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Opening Date</label>
+                        <input type="date" name="opening_date" class="form-control @error('opening_date') is-invalid @enderror" value="{{ old('opening_date', $branch->opening_date?->format('Y-m-d')) }}">
+                        @error('opening_date') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
             </div>
@@ -30,46 +37,11 @@
                 <textarea name="address" class="form-control @error('address') is-invalid @enderror" rows="2">{{ old('address', $branch->address) }}</textarea>
                 @error('address') <span class="invalid-feedback">{{ $message }}</span> @enderror
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>City</label>
-                        <input type="text" name="city" class="form-control @error('city') is-invalid @enderror" value="{{ old('city', $branch->city) }}">
-                        @error('city') <span class="invalid-feedback">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>State</label>
-                        <input type="text" name="state" class="form-control @error('state') is-invalid @enderror" value="{{ old('state', $branch->state) }}">
-                        @error('state') <span class="invalid-feedback">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Phone</label>
-                        <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $branch->phone) }}">
-                        @error('phone') <span class="invalid-feedback">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $branch->email) }}">
-                        @error('email') <span class="invalid-feedback">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Status</label>
-                        <div class="custom-control custom-switch mt-2">
-                            <input type="hidden" name="is_active" value="0">
-                            <input type="checkbox" name="is_active" value="1" class="custom-control-input" id="is_active" {{ old('is_active', $branch->is_active) ? 'checked' : '' }}>
-                            <label class="custom-control-label" for="is_active">Active</label>
-                        </div>
-                    </div>
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input type="hidden" name="is_active" value="0">
+                    <input type="checkbox" name="is_active" value="1" class="custom-control-input" id="is_active" {{ old('is_active', $branch->is_active) ? 'checked' : '' }}>
+                    <label class="custom-control-label" for="is_active">Active</label>
                 </div>
             </div>
         </div>

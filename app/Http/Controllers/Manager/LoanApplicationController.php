@@ -35,11 +35,15 @@ class LoanApplicationController extends Controller
     public function approve(Request $request, LoanApplication $loanApplication)
     {
         $request->validate([
-            'approved_amount'   => 'nullable|numeric|min:0',
-            'remarks'           => 'nullable|string|max:500',
+            'approved_amount' => 'nullable|numeric|min:0',
+            'remarks'         => 'nullable|string|max:500',
         ]);
 
-        $this->loanService->approveApplication($loanApplication, Auth::user(), $request->only('approved_amount', 'remarks'));
+        $this->loanService->approveApplication($loanApplication, [
+            'approved_amount' => $request->approved_amount ?? $loanApplication->applied_amount,
+            'approved_by'     => Auth::id(),
+            'remark'          => $request->remarks,
+        ]);
 
         return redirect()->route('manager.loan-applications.show', $loanApplication->id)
             ->with('success', 'Loan application approved successfully.');
@@ -51,7 +55,10 @@ class LoanApplicationController extends Controller
             'rejection_reason' => 'nullable|string|max:500',
         ]);
 
-        $this->loanService->rejectApplication($loanApplication, Auth::user(), $request->rejection_reason);
+        $this->loanService->rejectApplication($loanApplication, [
+            'approved_by' => Auth::id(),
+            'remark'      => $request->rejection_reason ?? '',
+        ]);
 
         return redirect()->route('manager.loan-applications.show', $loanApplication->id)
             ->with('success', 'Loan application rejected.');

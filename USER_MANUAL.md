@@ -57,11 +57,12 @@ The SuperAdmin role has full access to system configuration. These settings affe
 
 **Path:** SuperAdmin > Company Setup
 
-Set the bank's name, address, registration number, and contact details. This information appears on printed receipts and reports.
+Set the bank's name, contact details, and tax registration numbers. This information appears on printed receipts and reports.
 
 1. Navigate to **Company Setup**
-2. Fill in all required fields
-3. Click **Save**
+2. Fill in: Company Name, Address, Phone, Email, Website, GST No., PAN No.
+3. Optionally upload a logo
+4. Click **Save Settings**
 
 ### 2.2 Managing Branches
 
@@ -69,7 +70,7 @@ Set the bank's name, address, registration number, and contact details. This inf
 
 | Action | Steps |
 |---|---|
-| Add branch | Click **New Branch** → fill name, address, manager → Save |
+| Add branch | Click **New Branch** → fill name, code, address, opening date → Save |
 | Edit branch | Click **Edit** next to the branch |
 | Deactivate | Toggle the Active switch |
 
@@ -93,26 +94,32 @@ Define the loan products offered by the bank (e.g., Personal Loan, Home Loan, Ag
 Fields:
 - **Name** — product name
 - **Interest Rate** — annual rate (%)
-- **Max Tenure** — in months
-- **Processing Fee** — flat or percentage
-- **Min / Max Amount**
+- **Duration** — in months
+- **Max Amount** — maximum loan amount
+- **No. of Installments** — total installment count
+- **Frequency** — Monthly, Quarterly, or Yearly
+- **Description** — optional notes
 
 ### 2.5 FD Setup
 
 **Path:** SuperAdmin > FD Setup
 
 Configure Fixed Deposit schemes:
-- Scheme name
-- Minimum and maximum deposit amount
-- Tenure options (months)
-- Interest rate per tenure slab
-- Compounding frequency (monthly, quarterly, yearly)
+- **Description** — scheme description
+- **Duration** — in days
+- **Interest Rate** — annual rate (%)
+- **Senior Citizen** — toggle for senior citizen scheme
+- **Special ROI** — toggle for special rate of interest
 
 ### 2.6 Account Types
 
 **Path:** SuperAdmin > Account Types
 
-Define savings, current, and OD account types with their respective minimum balance and interest rate settings.
+Define savings, current, and OD account types:
+- **Name** — display name
+- **Type** — Savings, Current, or Overdraft (OD)
+- **Minimum Balance** — required minimum balance
+- **Interest Rate** — annual rate (%)
 
 ---
 
@@ -286,7 +293,7 @@ Shows today's transaction summary:
    - The customer name and current balance appear automatically
 2. Select **Transaction Type**: Deposit or Withdrawal
 3. Enter **Amount**
-4. Select **Payment Mode**: Cash, Cheque, NEFT, IMPS, UPI
+4. Select **Payment Mode**: Cash or Cheque
 5. If **Cheque** is selected, enter cheque number, bank, and date
 6. Enter **Remarks** (optional)
 7. Click **Submit Transaction**

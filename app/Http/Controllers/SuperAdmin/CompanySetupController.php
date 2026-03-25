@@ -15,25 +15,20 @@ class CompanySetupController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'company_name'      => 'required|string|max:255',
-            'registration_no'   => 'nullable|string|max:100',
-            'address'           => 'nullable|string',
-            'city'              => 'nullable|string|max:100',
-            'state'             => 'nullable|string|max:100',
-            'country'           => 'nullable|string|max:100',
-            'pincode'           => 'nullable|string|max:20',
-            'phone'             => 'nullable|string|max:20',
-            'email'             => 'nullable|email|max:255',
-            'website'           => 'nullable|url|max:255',
-            'logo'              => 'nullable|image|max:2048',
-            'established_year'  => 'nullable|integer|min:1800|max:' . now()->year,
+            'name'    => 'required|string|max:255',
+            'address' => 'nullable|string',
+            'phone'   => 'nullable|string|max:50',
+            'email'   => 'nullable|email|max:100',
+            'website' => 'nullable|url|max:255',
+            'gst_no'  => 'nullable|string|max:50',
+            'pan_no'  => 'nullable|string|max:50',
+            'logo'    => 'nullable|image|max:2048',
         ]);
 
         $company = CompanySetup::first() ?? new CompanySetup();
 
         $data = $request->only([
-            'company_name', 'registration_no', 'address', 'city', 'state',
-            'country', 'pincode', 'phone', 'email', 'website', 'established_year',
+            'name', 'address', 'phone', 'email', 'website', 'gst_no', 'pan_no',
         ]);
 
         if ($request->hasFile('logo')) {

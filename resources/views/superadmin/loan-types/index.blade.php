@@ -18,9 +18,9 @@
                     <th>#</th>
                     <th>Name</th>
                     <th>Interest Rate</th>
-                    <th>Min Amount</th>
+                    <th>Duration</th>
                     <th>Max Amount</th>
-                    <th>Max Duration</th>
+                    <th>Installments</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -31,9 +31,9 @@
                     <td>{{ $lt->id }}</td>
                     <td>{{ $lt->name }}</td>
                     <td>{{ $lt->interest_rate }}%</td>
-                    <td>{{ $lt->min_amount ? number_format($lt->min_amount, 2) : '-' }}</td>
-                    <td>{{ $lt->max_amount ? number_format($lt->max_amount, 2) : '-' }}</td>
-                    <td>{{ $lt->max_duration ? $lt->max_duration . ' months' : '-' }}</td>
+                    <td>{{ $lt->duration_months }} months</td>
+                    <td>{{ number_format($lt->max_amount, 2) }}</td>
+                    <td>{{ $lt->num_installments }}</td>
                     <td>
                         @if($lt->is_active)
                             <span class="badge badge-success">Active</span>
