@@ -1,0 +1,21 @@
+# Development overrides — auto-loaded by `docker compose up`
+# Delete or rename this file when deploying to production.
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+    volumes:
+      # Mount source code for live changes (views, controllers, routes, etc.)
+      - ./app:/var/www/html/app
+      - ./routes:/var/www/html/routes
+      - ./config:/var/www/html/config
+      - ./resources/views:/var/www/html/resources/views
+      - ./database/migrations:/var/www/html/database/migrations
+      - ./database/seeders:/var/www/html/database/seeders
+      # Persist data
+      - db_data:/var/www/html/database
+      - storage_data:/var/www/html/storage/app

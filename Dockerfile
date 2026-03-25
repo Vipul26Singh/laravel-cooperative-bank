@@ -8,7 +8,7 @@ FROM node:20-alpine AS frontend
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN npm install
 
 COPY vite.config.js ./
 COPY resources/ resources/
@@ -27,7 +27,7 @@ COPY . .
 RUN composer dump-autoload --optimize
 
 # ---------- Stage 3: Production image ----------
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # Install system dependencies
 RUN apk add --no-cache \

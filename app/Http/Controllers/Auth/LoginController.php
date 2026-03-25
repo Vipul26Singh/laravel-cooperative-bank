@@ -14,13 +14,13 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required|string',
+            'email'    => 'required|string|email',
             'password' => 'required|string',
         ]);
 
         $credentials = [
-            'email'    => $request->username, // username field maps to email
-            'password' => $request->password,
+            'email'     => $request->email,
+            'password'  => $request->password,
             'is_active' => true,
         ];
 
@@ -32,7 +32,7 @@ class LoginController extends Controller
             return redirect()->route($this->getDashboardRoute($user->role?->name));
         }
 
-        return back()->withErrors(['username' => 'Invalid credentials'])->withInput($request->only('username'));
+        return back()->withErrors(['email' => 'Invalid credentials'])->withInput($request->only('email'));
     }
 
     public function logout(Request $request)

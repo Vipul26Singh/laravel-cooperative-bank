@@ -8,10 +8,24 @@ use App\Http\Controllers\Clerk\{DashboardController as ClerkDashboard, CustomerC
 use App\Http\Controllers\Cashier\{DashboardController as CashierDashboard, BankTransactionController, LoanRepaymentController};
 use App\Http\Controllers\Accountant\{DashboardController as AccountantDashboard, ReportController};
 
+// Home — redirect authenticated users to their dashboard
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route(match (auth()->user()->role?->name) {
+            'SuperAdmin' => 'superadmin.dashboard',
+            'Manager'    => 'manager.dashboard',
+            'Clerk'      => 'clerk.dashboard',
+            'Cashier'    => 'cashier.dashboard',
+            'Accountant' => 'accountant.dashboard',
+            default      => 'login',
+        });
+    }
+    return redirect()->route('login');
+});
+
 // Auth Routes
 Route::middleware('guest')->group(function () {
-    Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::get('/login', [LoginController::class, 'showLoginForm']);
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 });
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
