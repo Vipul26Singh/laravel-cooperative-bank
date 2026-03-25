@@ -26,5 +26,11 @@ Homestead.json
 /storage/pail
 .env.backup
 .env.production
+.env.dusk.local
+database/dusk.sqlite
+tests/Browser/screenshots/**/*.png
+tests/Browser/console/*
+!tests/Browser/screenshots/**/.gitkeep
+!tests/Browser/console/.gitkeep
 .phpactor.json
 auth.json

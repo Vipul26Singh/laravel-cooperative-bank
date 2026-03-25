@@ -341,54 +341,87 @@ Start the scheduler in production:
 
 ## Testing
 
-The project uses **PHPUnit 12** with **SQLite in-memory** for fast, isolated tests. 109 feature tests cover authentication, role-based access, CRUD operations, business workflows, and input validation.
+Two test suites cover the entire application — **PHPUnit** for fast backend logic and **Laravel Dusk** for real browser-based UI testing with screenshots.
+
+### Unit & Feature Tests (PHPUnit)
+
+109 tests covering authentication, role-based access, CRUD, business workflows, and input validation. Runs in ~3 seconds with SQLite in-memory.
 
 ```bash
-# Run all tests
-php artisan test
-
-# Run with coverage (requires Xdebug or PCOV)
-php artisan test --coverage
-
-# Run specific test suite
-php artisan test --testsuite=Feature
-php artisan test --testsuite=Unit
-
-# Run a specific test file
-php artisan test --filter=CustomerApprovalTest
-
-# Run tests inside Docker
-docker compose exec app php artisan test
+php artisan test                          # run all
+php artisan test --filter=CustomerApprovalTest   # run one file
+php artisan test --coverage               # with coverage (needs Xdebug/PCOV)
+docker compose exec app php artisan test  # inside Docker
 ```
-
-### Test Structure
 
 ```
 tests/Feature/
-├── Auth/
-│   └── LoginTest.php                  # Login, logout, redirects, validation
-├── RoleAccess/
-│   └── RoleAccessTest.php             # All 5 roles × all route groups
-├── SuperAdmin/
-│   ├── BranchTest.php                 # Branch CRUD
-│   ├── UserManagementTest.php         # User CRUD, password handling
-│   ├── LoanTypeTest.php              # Loan type CRUD
-│   ├── FdSetupTest.php               # FD setup CRUD
-│   ├── AccountTypeTest.php           # Account type CRUD
-│   └── CompanySetupTest.php          # Company config
-├── Manager/
-│   ├── DashboardTest.php             # Dashboard, branch scoping
-│   ├── CustomerApprovalTest.php      # Approve/reject, role enforcement
-│   └── CustomerWorkflowTest.php      # End-to-end approval workflow
-├── Clerk/
-│   ├── CustomerRegistrationTest.php  # Registration, validation, scoping
-│   └── LoanApplicationTest.php       # Submit, validate, create
-├── Cashier/
-│   ├── DashboardTest.php             # Dashboard, form access
-│   └── TransactionTest.php           # Deposit, withdraw, validation
-└── Accountant/
-    └── DashboardTest.php             # Dashboard, role enforcement
+├── Auth/LoginTest.php                  # Login, logout, redirects, validation
+├── RoleAccess/RoleAccessTest.php       # All 5 roles × all route groups
+├── SuperAdmin/                         # Branch, User, LoanType, FdSetup, AccountType, CompanySetup CRUD
+├── Manager/                            # Customer approval/reject, dashboard, workflow
+├── Clerk/                              # Customer registration, loan application
+├── Cashier/                            # Deposit, withdraw, validation
+└── Accountant/                         # Dashboard, role enforcement
 ```
+
+### Browser Tests (Laravel Dusk)
+
+6 end-to-end flow tests running **headless Chrome** via ChromeDriver. Each test logs in as one role, visits every page, takes screenshots, and logs out before the next role starts. Produces **68 screenshots** organized by role.
+
+#### Prerequisites
+
+- **Google Chrome** installed on the host machine
+- ChromeDriver is auto-managed by Dusk (downloaded on `dusk:install`)
+- No manual server startup needed — the test suite auto-starts a PHP dev server
+
+#### Running Browser Tests
+
+```bash
+# First-time setup (already done if you cloned this repo)
+php artisan dusk:install
+
+# Run all browser tests (headless)
+php artisan dusk
+
+# Watch tests run in a visible Chrome window
+php artisan dusk --browse
+
+# Run a specific role's flow
+php artisan dusk --filter=T02_SuperAdminFlow
+php artisan dusk --filter=T05_CashierFlow
+
+# Run inside Docker (requires Chrome in container — not included by default)
+# For CI, use the host machine or a Selenium container
+```
+
+> **Note:** Dusk swaps `.env` with `.env.dusk.local` during the run and restores it after. The test uses a separate `database/dusk.sqlite` database so your dev data is never touched.
+
+```
+tests/Browser/
+├── T01_LoginFlowTest.php        # Login page, invalid creds, login, logout
+├── T02_SuperAdminFlowTest.php   # All CRUD: branches, users, loan types, FD, accounts, company
+├── T03_ManagerFlowTest.php      # Dashboard, customers, bank accounts, FDs, loans, applications
+├── T04_ClerkFlowTest.php        # Dashboard, customer list/create, loan applications
+├── T05_CashierFlowTest.php      # Dashboard, transactions, loan repayments
+└── T06_AccountantFlowTest.php   # Dashboard, all 3 reports
+
+tests/Browser/screenshots/       # Auto-generated, organized by role
+├── 01-auth/                     # 6 screenshots
+├── 02-superadmin/               # 33 screenshots
+├── 03-manager/                  # 10 screenshots
+├── 04-clerk/                    # 6 screenshots
+├── 05-cashier/                  # 6 screenshots
+└── 06-accountant/               # 5 screenshots
+```
+
+### Test Summary
+
+| Suite | Tests | Assertions | Duration |
+|---|---|---|---|
+| PHPUnit (Feature + Unit) | 109 | 284 | ~3s |
+| Dusk (Browser) | 6 | 67 | ~140s |
+| **Total** | **115** | **351** | — |
 
 ---
 

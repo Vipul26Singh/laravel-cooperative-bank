@@ -223,7 +223,11 @@ Max size: 2MB. Allowed types: `jpg`, `jpeg`, `png`, `pdf`.
 
 ## Testing
 
-Tests use **PHPUnit 12** with **SQLite in-memory** (`phpunit.xml` sets `DB_DATABASE=:memory:`).
+Two test suites: **PHPUnit** (fast backend logic) and **Laravel Dusk** (real browser UI).
+
+### PHPUnit (Feature Tests)
+
+Uses **SQLite in-memory** (`phpunit.xml` sets `DB_DATABASE=:memory:`). 109 tests, ~3s.
 
 ```bash
 php artisan test                          # all tests
@@ -231,7 +235,7 @@ php artisan test --filter=BranchTest      # single file
 php artisan test --testsuite=Feature      # feature tests only
 ```
 
-Test files live in `tests/Feature/` organized by role:
+Test files in `tests/Feature/` organized by role:
 
 | Directory | Covers |
 |---|---|
@@ -244,6 +248,32 @@ Test files live in `tests/Feature/` organized by role:
 | `Accountant/` | Dashboard, role enforcement |
 
 Every test uses `RefreshDatabase` trait and seeds roles via `RoleSeeder`. Create test data directly with `Model::create()` — no factories exist yet.
+
+### Laravel Dusk (Browser Tests)
+
+Uses **headless Chrome** via ChromeDriver. 6 sequential flow tests covering every page in the app. Produces **68 screenshots** in `tests/Browser/screenshots/` organized by role.
+
+```bash
+php artisan dusk                              # run all (headless)
+php artisan dusk --browse                     # visible browser
+php artisan dusk --filter=T02_SuperAdminFlow  # single role
+```
+
+Key files:
+- `tests/DuskTestCase.php` — base class, auto-starts PHP server + ChromeDriver, migrates once
+- `.env.dusk.local` — separate env with its own SQLite database (`database/dusk.sqlite`)
+- `tests/Browser/T01_LoginFlowTest.php` through `T06_AccountantFlowTest.php` — one file per role
+
+How Dusk works:
+1. `php artisan dusk` swaps `.env` → `.env.dusk.local` (restores after)
+2. `DuskTestCase::prepare()` starts ChromeDriver + a PHP dev server on port 8001
+3. Each test class runs one `test_full_*_flow()` method that logs in, visits all pages, screenshots, logs out
+4. Screenshots saved to `tests/Browser/screenshots/{01-auth,02-superadmin,...}/`
+
+To add a new browser test for a page:
+1. Find the role's flow test (e.g., `T03_ManagerFlowTest.php`)
+2. Add `$browser->visit('/manager/new-page')->waitForText('Expected')->screenshot('03-manager/new-page');`
+3. Run `php artisan dusk --filter=T03_ManagerFlow` to verify
 
 ---
 

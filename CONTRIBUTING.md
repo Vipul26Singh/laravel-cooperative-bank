@@ -183,6 +183,7 @@ Every PR should include tests proportional to the change:
 |---|---|
 | New Service method | Unit test for the method |
 | New Controller action | Feature test (HTTP assertion) |
+| New Blade view/page | Add to the role's Dusk flow test |
 | New Event/Listener | Feature test triggering the event |
 | Bug fix | Regression test that fails before the fix |
 | New migration | No test required, but seed data if needed |
@@ -203,33 +204,20 @@ docker compose exec app php artisan test
 Use `RefreshDatabase` trait and seed roles in `setUp()`. No factories exist yet — create test data with `Model::create()`.
 
 ```php
-use App\Models\{User, Role, Branch, Customer};
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
+// Feature test example (tests/Feature/Manager/CustomerApprovalTest.php)
 class CustomerApprovalTest extends TestCase
 {
     use RefreshDatabase;
-
-    private User $manager;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->seed(\Database\Seeders\RoleSeeder::class);
-
-        $branch = Branch::create(['name' => 'Main', 'code' => 'BR001', 'address' => 'Addr', 'is_active' => true]);
-        $role = Role::where('name', 'Manager')->first();
-        $this->manager = User::create([
-            'name' => 'Manager', 'email' => 'mgr@test.com',
-            'password' => bcrypt('Password@123'), 'role_id' => $role->id,
-            'branch_id' => $branch->id, 'is_active' => true,
-        ]);
+        // Create users, branches, etc.
     }
 
     public function test_manager_can_approve_customer(): void
     {
-        $customer = Customer::create([...]);
-
         $this->actingAs($this->manager)
             ->post("/manager/customers/{$customer->id}/approve")
             ->assertRedirect();
@@ -240,6 +228,30 @@ class CustomerApprovalTest extends TestCase
     }
 }
 ```
+
+### Browser Tests (Laravel Dusk)
+
+Browser tests use **headless Chrome** and live in `tests/Browser/`. Each role has one flow test file.
+
+```bash
+php artisan dusk                              # run all
+php artisan dusk --browse                     # visible Chrome
+php artisan dusk --filter=T03_ManagerFlow     # single role
+```
+
+To add a new page to browser tests, find the role's flow file and add a `visit()` + `screenshot()`:
+
+```php
+// In tests/Browser/T03_ManagerFlowTest.php
+$browser->visit('/manager/new-page')
+    ->waitForText('Page Title')
+    ->assertSee('Expected Content')
+    ->screenshot('03-manager/new-page');
+```
+
+Screenshots are organized by role in `tests/Browser/screenshots/{01-auth,02-superadmin,...}/`. They are gitignored (regenerated on each run).
+
+**Prerequisites:** Google Chrome must be installed. ChromeDriver is auto-managed. No manual server needed — `DuskTestCase` starts one on port 8001.
 
 ---
 
