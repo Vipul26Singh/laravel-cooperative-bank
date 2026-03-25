@@ -19,9 +19,22 @@ This manual covers daily operations for each staff role. Use the table of conten
 
 ## 1. Getting Started
 
+### Running the Application (Docker)
+
+The simplest way to run the application is via Docker — no software installation required beyond Docker itself.
+
+```bash
+# Start the application
+docker compose up -d
+
+# The app is now available at http://localhost:8000
+```
+
+On first launch, the system automatically sets up the database and creates the default admin account. See the [README](README.md#docker-standalone) for more Docker commands and configuration options.
+
 ### Logging In
 
-1. Open the bank portal in your browser
+1. Open the bank portal in your browser (`http://localhost:8000` if running via Docker)
 2. Enter your registered **Email** and **Password**
 3. Click **Login**
 4. You will be redirected to your role-specific dashboard
@@ -410,6 +423,14 @@ The account balance after the withdrawal would fall below the minimum balance. E
 ### Session Expired
 
 If you are inactive for an extended period, your session will expire for security. Log in again — your data is saved.
+
+### Docker Container Issues
+
+If the application is not loading after `docker compose up -d`:
+
+1. Check container logs: `docker compose logs -f app`
+2. Verify the container is running: `docker compose ps`
+3. If the database is corrupted, reset it: `docker compose down -v && docker compose up -d`
 
 ### Getting Help
 

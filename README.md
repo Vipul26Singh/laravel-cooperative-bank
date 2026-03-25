@@ -10,6 +10,7 @@ A full-featured cooperative banking management system built with **Laravel 13**,
 - [Tech Stack](#tech-stack)
 - [System Requirements](#system-requirements)
 - [Quick Start](#quick-start)
+- [Docker (Standalone)](#docker-standalone)
 - [User Roles](#user-roles)
 - [Architecture Overview](#architecture-overview)
 - [API Reference](#api-reference)
@@ -50,6 +51,7 @@ A full-featured cooperative banking management system built with **Laravel 13**,
 | API Client (JS) | Axios |
 | Testing | PHPUnit 12 |
 | Code Style | Laravel Pint |
+| Containerization | Docker + Docker Compose |
 
 ---
 
@@ -104,6 +106,106 @@ npm run dev
 ```
 
 This concurrently starts the PHP dev server, queue worker, log watcher, and Vite hot-reload server.
+
+---
+
+## Docker (Standalone)
+
+Run the entire application as a self-contained Docker container — no PHP, Composer, or Node.js required on the host.
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) >= 20.10
+- [Docker Compose](https://docs.docker.com/compose/install/) >= 2.x
+
+### One-Command Start
+
+```bash
+docker compose up -d
+```
+
+The app will be available at `http://localhost:8000`.
+
+On first launch the container automatically:
+1. Generates an application key
+2. Creates the SQLite database
+3. Runs all migrations
+4. Seeds default data (roles, admin user, etc.)
+
+**Default admin credentials:**
+- Email: `admin@coopbank.com`
+- Password: `Admin@123`
+
+### Common Operations
+
+```bash
+# View logs
+docker compose logs -f app
+
+# Stop the app
+docker compose down
+
+# Stop and remove all data (database + uploads)
+docker compose down -v
+
+# Rebuild after code changes
+docker compose up -d --build
+
+# Run artisan commands inside the container
+docker compose exec app php artisan tinker
+docker compose exec app php artisan migrate:status
+
+# Access a shell inside the container
+docker compose exec app sh
+```
+
+### Configuration
+
+Override settings via environment variables in `docker-compose.yml` or a `.env` file:
+
+| Variable | Default | Description |
+|---|---|---|
+| `APP_PORT` | `8000` | Host port to expose |
+| `APP_ENV` | `production` | Application environment |
+| `APP_DEBUG` | `false` | Debug mode |
+| `APP_URL` | `http://localhost:8000` | Application URL |
+| `MAIL_MAILER` | `log` | Mail driver (`log`, `smtp`) |
+| `MAIL_HOST` | — | SMTP host |
+| `MAIL_PORT` | — | SMTP port |
+| `MAIL_USERNAME` | — | SMTP username |
+| `MAIL_PASSWORD` | — | SMTP password |
+
+### Data Persistence
+
+Two named Docker volumes are used:
+- `db_data` — SQLite database file
+- `storage_data` — uploaded files (KYC documents, etc.)
+
+Data survives container restarts and rebuilds. To fully reset, run `docker compose down -v`.
+
+### Architecture
+
+The container bundles everything in a single image:
+- **Nginx** — web server on port 80
+- **PHP-FPM 8.3** — application runtime
+- **Supervisor** — manages Nginx, PHP-FPM, queue worker, and scheduler
+- **SQLite** — embedded database (no external DB needed)
+
+```
+┌──────────────────────────────────────────┐
+│            Docker Container              │
+│                                          │
+│   Nginx :80  ──►  PHP-FPM :9000         │
+│                                          │
+│   Supervisor                             │
+│   ├── php-fpm                            │
+│   ├── nginx                              │
+│   ├── queue:work (background jobs)       │
+│   └── schedule:run (cron loop)           │
+│                                          │
+│   SQLite (database/database.sqlite)      │
+└──────────────────────────────────────────┘
+```
 
 ---
 
