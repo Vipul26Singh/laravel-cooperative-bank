@@ -227,7 +227,7 @@ Two test suites: **PHPUnit** (fast backend logic) and **Laravel Dusk** (real bro
 
 ### PHPUnit (Feature Tests)
 
-Uses **SQLite in-memory** (`phpunit.xml` sets `DB_DATABASE=:memory:`). 109 tests, ~3s.
+Uses **SQLite in-memory** (`phpunit.xml` sets `DB_DATABASE=:memory:`). 195 tests, ~8s.
 
 ```bash
 php artisan test                          # all tests
@@ -241,11 +241,12 @@ Test files in `tests/Feature/` organized by role:
 |---|---|
 | `Auth/` | Login, logout, role redirects |
 | `RoleAccess/` | All 5 roles × all route groups |
-| `SuperAdmin/` | Branch, User, LoanType, FdSetup, AccountType, CompanySetup CRUD |
-| `Manager/` | Customer approval/rejection, dashboard, workflows |
+| `SuperAdmin/` | Branch, User, LoanType, FdSetup, AccountType, CompanySetup CRUD, TaskScheduler, QueueMonitor |
+| `Manager/` | Customer approval/rejection, bulk approval, dashboard, workflows |
 | `Clerk/` | Customer registration, loan application submission |
 | `Cashier/` | Transaction deposit/withdraw, validation |
 | `Accountant/` | Dashboard, role enforcement |
+| `Api/` | Auth, Customer, BankAccount, Transaction, Loan, FD, Dashboard (Sanctum) |
 
 Every test uses `RefreshDatabase` trait and seeds roles via `RoleSeeder`. Create test data directly with `Model::create()` — no factories exist yet.
 

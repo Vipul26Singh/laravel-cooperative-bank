@@ -32,6 +32,7 @@
             <div class="mb-3">
                 <label class="form-label">Database Name</label>
                 <input type="text" name="db_database" class="form-control" value="{{ old('db_database', 'coopbank') }}">
+                <small class="text-muted">Will be created automatically if it doesn't exist</small>
             </div>
             <div class="row mb-3">
                 <div class="col-6">

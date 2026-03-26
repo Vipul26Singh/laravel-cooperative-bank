@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,
             CompanySetupSeeder::class,
             AdminUserSeeder::class,
+            ScheduledTaskSeeder::class,
         ]);
     }
 }

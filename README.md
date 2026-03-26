@@ -66,12 +66,19 @@ Most cooperative banks in India still run on legacy desktop software or expensiv
 - **Loan Demand Collection Sheet** — EMI schedule vs actual collections for monitoring and follow-up
 - **Audit Trail** — Every sensitive action (approval, transaction, disbursement) is logged with user, branch, IP, and timestamp via event-driven listeners
 
+### Operations & Monitoring
+
+- **Task Scheduler UI** — View, enable/disable, edit schedule, run manually, and monitor all 7 scheduled tasks from the browser. No crontab editing needed.
+- **Queue Monitor** — Real-time dashboard for pending and failed background jobs. Retry, delete, or flush failed jobs. Process the entire queue with one click.
+- **Schedulable Jobs** — Overdue EMI reminders, upcoming EMI alerts, audit log cleanup, daily transaction reports — all configurable from the admin panel
+
 ### Technical
 
 - **Event-Driven Architecture** — 11 domain events with queued listeners for notifications, audit logging, and schedule generation
 - **REST API** — Full Sanctum-authenticated API for mobile/SPA clients (customers, accounts, transactions, loans, FDs)
 - **Docker Standalone** — One-command deployment with Nginx, PHP-FPM, queue worker, and scheduler bundled in a single container
-- **184 Automated Tests** — 178 PHPUnit tests (114 web + 16 new features + 48 API) + 6 Dusk browser tests with 68+ auto-generated screenshots
+- **Web Installer** — 5-step browser-based setup wizard with requirements check, DB auto-creation, and admin account setup
+- **201 Automated Tests** — 195 PHPUnit tests + 6 Dusk browser tests with 80+ auto-generated screenshots
 
 ---
 
@@ -127,8 +134,16 @@ Most cooperative banks in India still run on legacy desktop software or expensiv
 
 ![Loan Outstanding](docs/screenshots/loan-outstanding-report.png)
 
+### Task Scheduler (SuperAdmin)
+
+![Task Scheduler](docs/screenshots/task-scheduler.png)
+
+### Queue Monitor (SuperAdmin)
+
+![Queue Monitor](docs/screenshots/queue-monitor.png)
+
 <details>
-<summary>View all 68 screenshots organized by role</summary>
+<summary>View all 80+ screenshots organized by role</summary>
 
 Run `php artisan dusk` to regenerate. Screenshots are saved to:
 
@@ -572,10 +587,10 @@ tests/Browser/screenshots/       # Auto-generated, organized by role
 
 | Suite | Tests | Assertions | Duration |
 |---|---|---|---|
-| PHPUnit — Web (Feature + Unit) | 130 | 340 | ~3s |
+| PHPUnit — Web (Feature + Unit) | 147 | 385 | ~6s |
 | PHPUnit — API (Sanctum) | 48 | 162 | ~1s |
-| Dusk — Browser (headless Chrome) | 6 | 72 | ~140s |
-| **Total** | **184** | **574** | — |
+| Dusk — Browser (headless Chrome) | 6 | 82 | ~155s |
+| **Total** | **201** | **629** | — |
 
 ---
 
