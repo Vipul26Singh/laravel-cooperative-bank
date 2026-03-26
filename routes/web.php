@@ -8,6 +8,19 @@ use App\Http\Controllers\Clerk\{DashboardController as ClerkDashboard, CustomerC
 use App\Http\Controllers\Cashier\{DashboardController as CashierDashboard, BankTransactionController, LoanRepaymentController};
 use App\Http\Controllers\Accountant\{DashboardController as AccountantDashboard, ReportController};
 
+// Installation Wizard
+Route::prefix('install')->name('install.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\InstallController::class, 'welcome'])->name('welcome');
+    Route::get('/requirements', [\App\Http\Controllers\InstallController::class, 'requirements'])->name('requirements');
+    Route::get('/database', [\App\Http\Controllers\InstallController::class, 'database'])->name('database');
+    Route::post('/database', [\App\Http\Controllers\InstallController::class, 'saveDatabase']);
+    Route::get('/admin', [\App\Http\Controllers\InstallController::class, 'admin'])->name('admin');
+    Route::post('/admin', [\App\Http\Controllers\InstallController::class, 'saveAdmin']);
+    Route::get('/finish', [\App\Http\Controllers\InstallController::class, 'finish'])->name('finish');
+    Route::post('/run', [\App\Http\Controllers\InstallController::class, 'run'])->name('run');
+    Route::get('/complete', [\App\Http\Controllers\InstallController::class, 'complete'])->name('complete');
+});
+
 // Home — redirect authenticated users to their dashboard
 Route::get('/', function () {
     if (auth()->check()) {

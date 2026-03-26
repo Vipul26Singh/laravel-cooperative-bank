@@ -21,6 +21,7 @@ Most cooperative banks in India still run on legacy desktop software or expensiv
 - [Tech Stack](#tech-stack)
 - [System Requirements](#system-requirements)
 - [Quick Start](#quick-start)
+- [Web Installer](#web-installer)
 - [Docker (Standalone)](#docker-standalone)
 - [User Roles](#user-roles)
 - [Architecture Overview](#architecture-overview)
@@ -212,6 +213,36 @@ npm run dev
 ```
 
 This concurrently starts the PHP dev server, queue worker, log watcher, and Vite hot-reload server.
+
+---
+
+## Web Installer
+
+Prefer a GUI over the command line? The built-in **web-based installation wizard** handles everything through your browser.
+
+```bash
+# 1. Clone and install dependencies
+git clone https://github.com/vipul26singh/laravel-cooperative-bank.git
+cd laravel-cooperative-bank
+composer install && npm install && npm run build
+
+# 2. Start the server
+php artisan serve
+```
+
+Then open `http://localhost:8000/install` in your browser. The wizard walks you through 5 steps:
+
+| Step | What it does |
+|---|---|
+| **1. Welcome** | Overview of what's needed |
+| **2. Requirements** | Checks PHP version, extensions, writable directories |
+| **3. Database** | Configure SQLite (zero-config), MySQL, or PostgreSQL with live connection test |
+| **4. Admin** | Set app name, URL, and create the SuperAdmin account |
+| **5. Install** | Review settings, click Install — creates `.env`, runs migrations, seeds data |
+
+After installation, the wizard auto-disables itself. Visiting `/install` again redirects to the home page.
+
+> **Note:** The installer is also available when deploying via Docker — navigate to `http://localhost:8000/install` after `docker compose up -d` if you want to customize the setup instead of using the auto-configured defaults.
 
 ---
 
