@@ -43,6 +43,12 @@
     {{-- Post-install Commands --}}
     <h6 class="fw-bold mb-2"><i class="fas fa-terminal me-1"></i> Post-Install (for standalone servers)</h6>
     <table class="table table-sm table-bordered">
+        @if(collect(session('steps', []))->contains(fn($s) => $s['status'] === 'skipped' && str_contains($s['name'], 'encryption')))
+        <tr>
+            <td><strong class="text-danger">Generate App Key</strong><br><small class="text-muted">Default key was used. Generate a secure one for production.</small></td>
+            <td><pre class="bg-dark text-white p-2 rounded mb-0" style="font-size:0.78rem;">php artisan key:generate</pre></td>
+        </tr>
+        @endif
         <tr>
             <td><strong>Queue Worker</strong><br><small class="text-muted">Process background jobs (emails, notifications, audit)</small></td>
             <td><pre class="bg-dark text-white p-2 rounded mb-0" style="font-size:0.78rem;">php artisan queue:work</pre></td>
@@ -52,7 +58,7 @@
             <td><pre class="bg-dark text-white p-2 rounded mb-0" style="font-size:0.78rem;">* * * * * cd /path/to/project && php artisan schedule:run >> /dev/null 2>&1</pre></td>
         </tr>
     </table>
-    <small class="text-muted"><i class="fab fa-docker me-1"></i>If using Docker, both are already running automatically via Supervisor.</small>
+    <small class="text-muted"><i class="fab fa-docker me-1"></i>If using Docker, all of the above are handled automatically.</small>
 
     <div class="text-center mt-4">
         <a href="/login" class="btn btn-primary px-5"><i class="fas fa-sign-in-alt me-2"></i>Go to Login</a>
