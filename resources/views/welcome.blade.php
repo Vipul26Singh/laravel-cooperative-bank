@@ -127,9 +127,9 @@
             </div>
             <div class="col-md-4">
                 <div class="feature-card shadow-sm">
-                    <div class="feature-icon bg-dark bg-opacity-10"><i class="fas fa-shield-alt"></i></div>
-                    <h5 class="fw-bold">Security & Audit</h5>
-                    <p class="text-muted mb-0">Role-based access for 5 roles, branch data isolation, event-driven audit trail, Sanctum API authentication, password reset flow.</p>
+                    <div class="feature-icon bg-dark bg-opacity-10"><i class="fas fa-clock"></i></div>
+                    <h5 class="fw-bold">Task Scheduler & Queue Monitor</h5>
+                    <p class="text-muted mb-0">Visual dashboard for all scheduled tasks — enable, disable, edit timing, run manually. Monitor pending and failed background jobs in real-time.</p>
                 </div>
             </div>
         </div>
@@ -163,6 +163,12 @@
                 <div class="carousel-item">
                     <div class="text-center"><img src="/docs/screenshots/branch-details.png" class="screenshot-img" alt="Branch Details" style="max-height:500px;"><p class="mt-3 fw-bold">Branch Details (SuperAdmin)</p></div>
                 </div>
+                <div class="carousel-item">
+                    <div class="text-center"><img src="/docs/screenshots/task-scheduler.png" class="screenshot-img" alt="Task Scheduler" style="max-height:500px;"><p class="mt-3 fw-bold">Task Scheduler (SuperAdmin)</p></div>
+                </div>
+                <div class="carousel-item">
+                    <div class="text-center"><img src="/docs/screenshots/queue-monitor.png" class="screenshot-img" alt="Queue Monitor" style="max-height:500px;"><p class="mt-3 fw-bold">Queue Monitor (SuperAdmin)</p></div>
+                </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#screenshotCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon bg-dark rounded-circle p-3"></span></button>
             <button class="carousel-control-next" type="button" data-bs-target="#screenshotCarousel" data-bs-slide="next"><span class="carousel-control-next-icon bg-dark rounded-circle p-3"></span></button>
@@ -173,6 +179,8 @@
                 <button type="button" data-bs-target="#screenshotCarousel" data-bs-slide-to="3" class="bg-dark"></button>
                 <button type="button" data-bs-target="#screenshotCarousel" data-bs-slide-to="4" class="bg-dark"></button>
                 <button type="button" data-bs-target="#screenshotCarousel" data-bs-slide-to="5" class="bg-dark"></button>
+                <button type="button" data-bs-target="#screenshotCarousel" data-bs-slide-to="6" class="bg-dark"></button>
+                <button type="button" data-bs-target="#screenshotCarousel" data-bs-slide-to="7" class="bg-dark"></button>
             </div>
         </div>
     </div>

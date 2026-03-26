@@ -44,6 +44,18 @@
                     <p>Company Setup</p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('superadmin.task-scheduler.index') }}" class="nav-link {{ request()->routeIs('superadmin.task-scheduler.*') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-clock"></i>
+                    <p>Task Scheduler</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('superadmin.queue-monitor.index') }}" class="nav-link {{ request()->routeIs('superadmin.queue-monitor.*') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-tasks"></i>
+                    <p>Queue Monitor</p>
+                </a>
+            </li>
         @endif
 
         @if(auth()->user()->role?->name === 'Manager')

@@ -77,6 +77,22 @@ Route::middleware(['auth', 'role:SuperAdmin'])->prefix('superadmin')->name('supe
     Route::resource('account-types', AccountTypeController::class);
     Route::get('/company-setup', [CompanySetupController::class, 'show'])->name('company-setup.show');
     Route::put('/company-setup', [CompanySetupController::class, 'update'])->name('company-setup.update');
+
+    // Task Scheduler
+    Route::get('/task-scheduler', [\App\Http\Controllers\SuperAdmin\TaskSchedulerController::class, 'index'])->name('task-scheduler.index');
+    Route::patch('/task-scheduler/{scheduledTask}/toggle', [\App\Http\Controllers\SuperAdmin\TaskSchedulerController::class, 'toggle'])->name('task-scheduler.toggle');
+    Route::post('/task-scheduler/{scheduledTask}/run', [\App\Http\Controllers\SuperAdmin\TaskSchedulerController::class, 'run'])->name('task-scheduler.run');
+    Route::get('/task-scheduler/{scheduledTask}/edit', [\App\Http\Controllers\SuperAdmin\TaskSchedulerController::class, 'edit'])->name('task-scheduler.edit');
+    Route::put('/task-scheduler/{scheduledTask}', [\App\Http\Controllers\SuperAdmin\TaskSchedulerController::class, 'update'])->name('task-scheduler.update');
+    Route::get('/task-scheduler/{scheduledTask}/logs', [\App\Http\Controllers\SuperAdmin\TaskSchedulerController::class, 'logs'])->name('task-scheduler.logs');
+
+    // Queue Monitor
+    Route::get('/queue-monitor', [\App\Http\Controllers\SuperAdmin\QueueMonitorController::class, 'index'])->name('queue-monitor.index');
+    Route::post('/queue-monitor/process', [\App\Http\Controllers\SuperAdmin\QueueMonitorController::class, 'processNow'])->name('queue-monitor.process');
+    Route::post('/queue-monitor/retry-all', [\App\Http\Controllers\SuperAdmin\QueueMonitorController::class, 'retryAll'])->name('queue-monitor.retry-all');
+    Route::post('/queue-monitor/{id}/retry', [\App\Http\Controllers\SuperAdmin\QueueMonitorController::class, 'retry'])->name('queue-monitor.retry');
+    Route::delete('/queue-monitor/{id}/forget', [\App\Http\Controllers\SuperAdmin\QueueMonitorController::class, 'forget'])->name('queue-monitor.forget');
+    Route::delete('/queue-monitor/flush', [\App\Http\Controllers\SuperAdmin\QueueMonitorController::class, 'flush'])->name('queue-monitor.flush');
 });
 
 // Manager Routes

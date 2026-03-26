@@ -121,6 +121,30 @@ Define savings, current, and OD account types:
 - **Minimum Balance** — required minimum balance
 - **Interest Rate** — annual rate (%)
 
+### 2.7 Task Scheduler
+
+**Path:** SuperAdmin > Task Scheduler
+
+View and manage all scheduled background tasks:
+- **Enable/Disable** — pause or resume any task
+- **Edit Schedule** — change the frequency (every 5 min, hourly, daily at specific time, weekly, monthly)
+- **Run Now** — execute a task immediately with one click
+- **View Logs** — see run history with status, duration, and who triggered it
+
+Default tasks include: FD maturity processing, OD interest calculation, queue drain, overdue EMI reminders, upcoming EMI alerts, audit log cleanup, and daily transaction reports.
+
+### 2.8 Queue Monitor
+
+**Path:** SuperAdmin > Queue Monitor
+
+Monitor background job processing:
+- **Pending Jobs** — see all jobs waiting to be processed, with job name, queue, and attempts
+- **Failed Jobs** — view failed jobs with error details
+- **Retry** — retry a specific failed job or all failed jobs at once
+- **Delete** — remove a failed job or clear all
+- **Process Now** — drain the entire queue immediately
+- **Queue Breakdown** — see job count per queue (default, notifications)
+
 ---
 
 ## 3. Manager

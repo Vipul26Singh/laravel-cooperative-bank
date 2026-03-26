@@ -219,6 +219,83 @@ class T02_SuperAdminFlowTest extends DuskTestCase
                 ->screenshot('02-superadmin/39-company-setup-saved');
 
             // ════════════════════════════════════════════════════
+            // TASK SCHEDULER
+            // ════════════════════════════════════════════════════
+
+            // Seed scheduled tasks
+            (new \App\Services\TaskSchedulerService())->seedDefaults();
+
+            $browser->visit('/superadmin/task-scheduler')
+                ->waitForText('Scheduled Tasks')
+                ->assertSee('Process FD Maturity')
+                ->assertSee('Process Loan OD Interest')
+                ->assertSee('Drain Job Queue')
+                ->assertSee('Send Overdue EMI Reminders')
+                ->assertSee('Daily Transaction Report')
+                ->screenshot('02-superadmin/42-task-scheduler-index');
+
+            // Edit first task's schedule
+            $browser->click('a[title="Edit Schedule"]')
+                ->waitForText('Edit Task Schedule')
+                ->assertSee('Frequency')
+                ->assertSee('Run Time')
+                ->screenshot('02-superadmin/43-task-scheduler-edit');
+
+            // View logs for first task
+            $browser->visit('/superadmin/task-scheduler')
+                ->waitForText('Scheduled Tasks')
+                ->click('a[title="View Logs"]')
+                ->waitForText('Task Run History')
+                ->screenshot('02-superadmin/44-task-scheduler-logs');
+
+            // ════════════════════════════════════════════════════
+            // QUEUE MONITOR
+            // ════════════════════════════════════════════════════
+
+            // Insert fake pending jobs directly into the jobs table
+            $now = now()->timestamp;
+            foreach ([
+                ['queue' => 'default', 'name' => 'App\\Jobs\\SendEmailJob'],
+                ['queue' => 'default', 'name' => 'App\\Jobs\\SendEmailJob'],
+                ['queue' => 'notifications', 'name' => 'App\\Jobs\\SendSmsJob'],
+            ] as $job) {
+                \Illuminate\Support\Facades\DB::table('jobs')->insert([
+                    'queue'        => $job['queue'],
+                    'payload'      => json_encode(['displayName' => $job['name'], 'job' => 'Illuminate\\Queue\\CallQueuedHandler@call']),
+                    'attempts'     => 0,
+                    'reserved_at'  => null,
+                    'available_at' => $now,
+                    'created_at'   => $now,
+                ]);
+            }
+
+            // Insert a fake failed job
+            \Illuminate\Support\Facades\DB::table('failed_jobs')->insert([
+                'uuid'       => \Illuminate\Support\Str::uuid(),
+                'connection' => 'database',
+                'queue'      => 'notifications',
+                'payload'    => json_encode(['displayName' => 'App\\Jobs\\SendEmailJob', 'job' => 'test']),
+                'exception'  => 'RuntimeException: SMTP connection refused at MailService.php:42',
+                'failed_at'  => now(),
+            ]);
+
+            $browser->visit('/superadmin/queue-monitor')
+                ->waitForText('Queue Monitor')
+                ->assertSee('Pending Jobs')
+                ->assertSee('Failed Jobs')
+                // Verify pending jobs show up
+                ->assertSee('SendEmailJob')
+                ->assertSee('SendSmsJob')
+                ->assertSee('notifications')
+                ->screenshot('02-superadmin/45-queue-monitor-pending');
+
+            // Scroll to failed jobs section
+            $browser->script('window.scrollTo(0, document.body.scrollHeight)');
+            $browser->pause(500)
+                ->assertSee('SMTP connection refused')
+                ->screenshot('02-superadmin/46-queue-monitor-failed');
+
+            // ════════════════════════════════════════════════════
             // SIDEBAR FULL NAVIGATION
             // ════════════════════════════════════════════════════
 
@@ -242,7 +319,13 @@ class T02_SuperAdminFlowTest extends DuskTestCase
                 ->screenshot('02-superadmin/40f-nav-account-types')
                 ->clickLink('Company Setup')
                 ->waitForText('Company Configuration')
-                ->screenshot('02-superadmin/40g-nav-company-setup');
+                ->screenshot('02-superadmin/40g-nav-company-setup')
+                ->clickLink('Task Scheduler')
+                ->waitForText('Scheduled Tasks')
+                ->screenshot('02-superadmin/40h-nav-task-scheduler')
+                ->clickLink('Queue Monitor')
+                ->waitForText('Queue Monitor')
+                ->screenshot('02-superadmin/40i-nav-queue-monitor');
 
             // ── Logout ───────────────────────────────────────────
             $browser->click('a[data-toggle="dropdown"]')
