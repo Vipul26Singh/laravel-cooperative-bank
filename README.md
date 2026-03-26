@@ -218,31 +218,38 @@ This concurrently starts the PHP dev server, queue worker, log watcher, and Vite
 
 ## Web Installer
 
-Prefer a GUI over the command line? The built-in **web-based installation wizard** handles everything through your browser.
+Prefer a GUI over the command line? The built-in **web-based installation wizard** handles the database setup, migrations, and admin user creation through your browser — no artisan commands needed.
+
+### Option A: Docker (Easiest — nothing to install)
 
 ```bash
-# 1. Clone and install dependencies
-git clone https://github.com/vipul26singh/laravel-cooperative-bank.git
-cd laravel-cooperative-bank
-composer install && npm install && npm run build
-
-# 2. Start the server
-php artisan serve
+docker compose up -d
+# Open http://localhost:8000/install
 ```
 
-Then open `http://localhost:8000/install` in your browser. The wizard walks you through 5 steps:
+### Option B: Manual (requires PHP + Composer on your machine)
+
+```bash
+git clone https://github.com/vipul26singh/laravel-cooperative-bank.git
+cd laravel-cooperative-bank
+composer install        # Required — Laravel needs vendor/ to boot
+php artisan serve       # Start the server
+# Open http://localhost:8000/install
+```
+
+> `npm install` and `npm run build` are **not required** — all CSS/JS comes from CDN. Only run them if you want to customize frontend assets.
+
+### Wizard Steps
 
 | Step | What it does |
 |---|---|
 | **1. Welcome** | Overview of what's needed |
 | **2. Requirements** | Checks PHP version, extensions, writable directories |
-| **3. Database** | Configure SQLite (zero-config), MySQL, or PostgreSQL with live connection test |
-| **4. Admin** | Set app name, URL, and create the SuperAdmin account |
-| **5. Install** | Review settings, click Install — creates `.env`, runs migrations, seeds data |
+| **3. Database** | Configure SQLite (zero-config), MySQL, or PostgreSQL — live connection test |
+| **4. Admin Setup** | Set app name, URL, and create the SuperAdmin account |
+| **5. Install** | Review settings → creates `.env`, runs migrations, seeds roles and data |
 
-After installation, the wizard auto-disables itself. Visiting `/install` again redirects to the home page.
-
-> **Note:** The installer is also available when deploying via Docker — navigate to `http://localhost:8000/install` after `docker compose up -d` if you want to customize the setup instead of using the auto-configured defaults.
+After installation, the wizard auto-disables itself (creates `storage/installed` marker). Visiting `/install` again redirects to the home page.
 
 ---
 
