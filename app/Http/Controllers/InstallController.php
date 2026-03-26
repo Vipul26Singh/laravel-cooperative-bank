@@ -161,16 +161,38 @@ class InstallController extends Controller
                 $dbPath = database_path('database.sqlite');
                 if (!file_exists($dbPath)) touch($dbPath);
             }
+            // 2. Write .env (uses default key from .env.example so app can boot)
             File::put(base_path('.env'), $env);
             $steps[] = ['name' => 'Create .env configuration', 'status' => 'success'];
 
-            // 2. Generate app key
-            Artisan::call('key:generate', ['--force' => true]);
-            $steps[] = ['name' => 'Generate application encryption key', 'status' => 'success'];
+            // 3. Try to generate a fresh app key (replaces default key)
+            try {
+                Artisan::call('key:generate', ['--force' => true]);
+                $steps[] = ['name' => 'Generate application encryption key', 'status' => 'success'];
+            } catch (\Exception $e) {
+                $steps[] = ['name' => 'Generate application encryption key', 'status' => 'skipped', 'note' => 'Run php artisan key:generate manually'];
+            }
 
-            // 3. Clear config cache
-            Artisan::call('config:clear');
-            $steps[] = ['name' => 'Clear configuration cache', 'status' => 'success'];
+            // 4. Set DB config at runtime so migrations work without reloading .env
+            $dbConn = $db['db_connection'] ?? 'sqlite';
+            config(["database.default" => $dbConn]);
+            if ($dbConn === 'sqlite') {
+                config(["database.connections.sqlite.database" => database_path('database.sqlite')]);
+            } else {
+                config([
+                    "database.connections.{$dbConn}.host"     => $db['db_host'] ?? '127.0.0.1',
+                    "database.connections.{$dbConn}.port"     => $db['db_port'] ?? '3306',
+                    "database.connections.{$dbConn}.database" => $db['db_database'] ?? 'coopbank',
+                    "database.connections.{$dbConn}.username"  => $db['db_username'] ?? 'root',
+                    "database.connections.{$dbConn}.password"  => $db['db_password'] ?? '',
+                ]);
+            }
+            DB::purge();
+            DB::reconnect();
+
+            // Clear config cache
+            try { Artisan::call('config:clear'); } catch (\Exception $e) { /* may fail if no cache exists */ }
+            $steps[] = ['name' => 'Configure database connection', 'status' => 'success'];
 
             // 4. Create storage symlink
             try {
