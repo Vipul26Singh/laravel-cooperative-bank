@@ -106,6 +106,71 @@ flowchart TB
     Scheduler --> Jobs
 ```
 
+```mermaid
+flowchart TB
+    U1[SuperAdmin / Manager / Clerk / Cashier / Accountant]
+    U2[API Clients / Mobile / SPA]
+    U3[Installer User]
+
+    subgraph Delivery
+        N[Nginx]
+        P[PHP-FPM Laravel App]
+        W[Queue Worker]
+        S[Scheduler]
+    end
+
+    subgraph Laravel Application
+        R[Routes\nweb.php / api.php]
+        M[Middleware\nAuth / Role / Branch Context / Installer]
+        C[Controllers\nRole-based + API]
+        SV[Services\nCustomer / Account / Loan / FD / Share / TaskScheduler]
+        E[Events]
+        L[Listeners]
+        J[Jobs]
+        V[Blade Views + AdminLTE + Tailwind]
+    end
+
+    subgraph Data Layer
+        DB[(SQLite dev / MySQL / PostgreSQL)]
+        Q[(jobs / failed_jobs)]
+        ST[(scheduled_tasks / task_run_logs)]
+        AU[(audit_logs)]
+        FS[(storage/app)]
+    end
+
+    U1 --> N --> P
+    U2 --> N --> P
+    U3 --> N --> P
+
+    P --> R --> M --> C
+    C --> SV
+    C --> V
+    SV --> DB
+    SV --> E
+    E --> L
+    L --> AU
+    L --> J
+    J --> Q
+    W --> Q
+    S --> ST
+    S --> J
+    P --> FS
+    P --> DB
+
+```
+
+### Deployment Architecure
+
+```mermaid
+flowchart LR
+    User[Browser / API Client] --> C[Single Docker Container]
+    C --> N[Nginx]
+    C --> P[PHP-FPM Laravel]
+    C --> W[Queue Worker]
+    C --> S[Scheduler]
+    P --> DB[(Embedded / external DB)]
+    P --> ST[(storage/app volume)]
+```
 ---
 
 ## ⚙️ Key Architectural Patterns
